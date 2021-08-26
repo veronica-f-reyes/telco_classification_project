@@ -49,8 +49,8 @@ def split_data(df):
     return train, validate, test
 
 
-def prep_iris_with_split(df):
-    '''Prepares acquired Iris data for exploration'''
+def prep_telco_with_split(df):
+    '''Prepares acquired Telco data for exploration'''
     
     # drop column using .drop(columns=column_name)
     df = df.drop(columns='species_id')
