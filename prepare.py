@@ -18,6 +18,7 @@ import seaborn as sns
 
 import acquire
 import prepare
+import explore
 
 import pandas as pd
 import numpy as np
@@ -30,34 +31,34 @@ from sklearn.impute import SimpleImputer
 def prep_telco(df):
 
     '''Prepares acquired Telco data for exploration'''
-    
-    # drop column in case it is created in addition to the index
-    df =  df.drop(columns=['Unnamed: 0'])
 
-    # drop column using .drop(columns=column_name)
-    df = df.drop(columns=['customer_id', 'contract_type_id.1', 'internet_service_type_id.1','payment_type_id.1'])
+    # drop unneeded columns using .drop(columns=column_name)
+    df = df.drop(columns=['Unnamed: 0','customer_id', 'contract_type_id.1', 'internet_service_type_id.1','payment_type_id.1'])
 
     #drop duplicates if there are any
     df = df.drop_duplicates()
     
-    # remame column using .rename(columns={current_column_name : replacement_column_name})
-    #df = df.rename(columns={'col_name':'column'})
-    
     # create dummies dataframe using .get_dummies(column_names,not dropping any of the dummy columns)
     features_multi = ['multiple_lines','online_security','online_backup','device_protection','tech_support','streaming_tv','streaming_movies',
                         'contract_type','internet_service_type','payment_type']
-    print(features_multi)
 
     dummy_df = pd.get_dummies(df, columns=features_multi, drop_first=False)
-
-    print(dummy_df.columns)
     
-    # join original df with dummies df using .concat([original_df,dummy_df], join along the index)
-    df = pd.concat([df, dummy_df], axis=1)
+    # join original df with dummies df using .concat([original_df,dummy_df])
+    df = pd.concat([df, dummy_df])
 
-    # Drop unnecessary columns after creating dummy variables to represent them
-    df = df.drop(columns=['multiple_lines','online_security','online_backup','device_protection','tech_support','streaming_tv','streaming_movies',
-                        'contract_type','internet_service_type','payment_type'])
+    # feature engineering: create new columns to filter by automatic payment and month-to-month churned customers
+    df['automatic_pmt'] = np.where(df['payment_type'].str.contains("automatic", case=False), 1, 0)
+
+    #convert object type column to float for total_charges column
+    df['total_charges'] = pd.to_numeric(df['total_charges'], errors='coerce')
+    
+    #Since customers with null values in the total_charges column have a tenure of 0, they are new customers who have not 
+    #been charged yet.  Thus, set the null value in total_charges equal to 0.
+    df = df.replace(np.nan, 0, regex=True)
+
+    #mtm_churned = ((df.churn == 'Yes') & (df.contract_type=='Month-to-month'))
+    #df['mtm_churned'] = np.where(mtm_churned, 1, 0)
 
 
     # encode features that have string values 
@@ -69,6 +70,16 @@ def prep_telco(df):
     df.replace({'churn':{'Yes':1, 'No':0}}, inplace=True)
     df.replace({'gender':{'Male':1, 'Female':0}}, inplace=True)
 
+    #df['mtm_churned'] = ((df.churn == 1) & (df.contract_type=='Month-to-month'))
+    #df['mtm_churned'] = np.where(df['mtm_churned'], 1, 0)
+
+
+    # Drop unnecessary columns after creating dummy variables to represent them
+    df = df.drop(columns=['multiple_lines','online_security','online_backup','device_protection','tech_support','streaming_tv','streaming_movies',
+                        'contract_type','internet_service_type','payment_type','internet_service_type_id', 'contract_type_id','payment_type_id'])
+    
+   
+    
     #yes_no_features = ['partner','dependents','phone_service','multiple_lines','paperless_billing','churn']
 
     #encode_columns(['partner','dependents','phone_service','multiple_lines','paperless_billing','churn'], df)  
@@ -95,58 +106,3 @@ def split_data(df):
     return train, validate, test
 
 
-def prep_telco_with_split(df):
-    '''Prepares acquired Telco data for exploration
-    This function take in the Telco data acquired, prepares it for exploration,
-    performs a split and stratifies survived column.
-    It returns train, validate, and test dfs.'''
-    
-    # drop column in case it is created in addition to the index
-    df =  df. df_telco.drop(columns=['Unnamed: 0'])
-
-    # drop column using .drop(columns=column_name)
-    df = df.drop(columns=['customer_id', 'contract_type_id.1', 'internet_service_type_id.1','payment_type_id.1'])
-
-    #drop duplicates if there are any
-    df = df.drop_duplicates()
-    
-    # remame column using .rename(columns={current_column_name : replacement_column_name})
-    #df = df.rename(columns={'col_name':'column'})
-    
-    # create dummies dataframe using .get_dummies(column_name,not dropping any of the dummy columns)
-    dummy_df = pd.get_dummies(df['churn'], drop_first=False)
-    
-    # join original df with dummies df using .concat([original_df,dummy_df], join along the index)
-    df = pd.concat([df, dummy_df], axis=1)
-    
-    # split data into train/validate/test using split_data function
-    train, validate, test = split_data(df)
-    
-    return train, validate, test
-
-#Encoding function for columns with string values of Yes or No
-#def  encode_columns(features, df):
- #   for i in features:
-  #      df[i] = df[i].map({'Yes':1, 'No':0})
-   # return
-
-
-def impute_mean_age(train, validate, test):
-    '''
-    This function imputes the mean of the age column for
-    observations with missing values.
-    Returns transformed train, validate, and test df.
-    '''
-    # create the imputer object with mean strategy
-    imputer = SimpleImputer(strategy = 'mean')
-    
-    # fit on and transform age column in train
-    train['age'] = imputer.fit_transform(train[['age']])
-    
-    # transform age column in validate
-    validate['age'] = imputer.transform(validate[['age']])
-    
-    # transform age column in test
-    test['age'] = imputer.transform(test[['age']])
-    
-    return train, validate, test
