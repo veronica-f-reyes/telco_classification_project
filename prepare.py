@@ -26,9 +26,30 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.impute import SimpleImputer
 
-###################### Prepare Telco Data ######################
+###################### Prepare Telco Data No Dummies ######################
+def prep_telco_raw(df):
 
-def prep_telco(df):
+    '''Prepares acquired Telco data for exploration'''
+
+    # drop unneeded columns using .drop(columns=column_name)
+    df = df.drop(columns=['Unnamed: 0','customer_id', 'contract_type_id.1', 'internet_service_type_id.1','payment_type_id.1'])
+
+    #drop duplicates if there are any
+    df = df.drop_duplicates()
+
+    # feature engineering: create new columns to filter by automatic payment and month-to-month churned customers
+    df['automatic_pmt'] = np.where(df['payment_type'].str.contains("automatic", case=False), 1, 0)
+
+    #Since customers with null values in the total_charges column have a tenure of 0, they are new customers who have not 
+    #been charged yet.  Thus, set the null value in total_charges equal to 0.
+    df = df.replace(np.nan, 0, regex=True)
+    
+    return df
+
+
+###################### Prepare Telco Data Encoded with Dummies ######################
+
+def prep_telco_encoded(df):
 
     '''Prepares acquired Telco data for exploration'''
 
@@ -52,7 +73,7 @@ def prep_telco(df):
 
     #convert object type column to float for total_charges column
     df['total_charges'] = pd.to_numeric(df['total_charges'], errors='coerce')
-    
+
     #Since customers with null values in the total_charges column have a tenure of 0, they are new customers who have not 
     #been charged yet.  Thus, set the null value in total_charges equal to 0.
     df = df.replace(np.nan, 0, regex=True)
