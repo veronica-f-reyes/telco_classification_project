@@ -75,12 +75,9 @@ def prep_telco_encoded(df):
     # feature engineering: create new columns to filter by automatic payment and month-to-month churned customers
     df['automatic_pmt'] = np.where(df['payment_type'].str.contains("auto", case=False), 1, 0)
 
-    #convert object type column to float for total_charges column
-    #df['total_charges'] = pd.to_numeric(df['total_charges'], errors='coerce')
-
     #Since customers with null values in the total_charges column have a tenure of 0, they are new customers who have not 
     #been charged yet.  Thus, set the null value in total_charges equal to 0.
-    #df = df.replace(np.nan, 0, regex=True)
+    df.total_charges = df.total_charges.replace('', 0)
 
     # encode features that have string values 
     df.replace({'partner':{'Yes':1, 'No':0}}, inplace=True)

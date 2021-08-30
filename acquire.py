@@ -36,7 +36,8 @@ def get_telco_data():
                 SELECT * FROM customers
                 JOIN contract_types ON customers.contract_type_id = contract_types.contract_type_id
                 JOIN internet_service_types ON customers.internet_service_type_id = internet_service_types.internet_service_type_id
-                JOIN payment_types ON customers.payment_type_id = customers.payment_type_id ;
+                JOIN payment_types ON customers.payment_type_id = payment_types.payment_type_id ;
+                
                 '''
 
          # read the SQL query into a dataframe
