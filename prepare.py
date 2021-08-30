@@ -58,7 +58,11 @@ def prep_telco_encoded(df):
 
     #drop duplicates if there are any
     df = df.drop_duplicates()
-    
+
+    #Rename values in payment type & contract type before creating dummies
+    df.replace({'payment_type':{'Bank transfer (automatic)':'bank_transfer_auto','Credit card (automatic)':'credit_card_auto','Mailed check':'mailed_check','Electronic check':'e_check' }}, inplace=True)
+    df.replace({'contract_type':{'Month-to-month':'m_to_m', 'One year':'one_yr', 'Two year':'two_yr'}}, inplace=True)
+
     # create dummies dataframe using .get_dummies(column_names,not dropping any of the dummy columns)
     features_multi = ['multiple_lines','online_security','online_backup','device_protection','tech_support','streaming_tv','streaming_movies',
                         'contract_type','internet_service_type','payment_type']
@@ -66,21 +70,17 @@ def prep_telco_encoded(df):
     dummy_df = pd.get_dummies(df, columns=features_multi, drop_first=False)
     
     # join original df with dummies df using .concat([original_df,dummy_df])
-    df = pd.concat([df, dummy_df])
+    df = pd.concat([df, dummy_df], axis=1)
 
     # feature engineering: create new columns to filter by automatic payment and month-to-month churned customers
-    df['automatic_pmt'] = np.where(df['payment_type'].str.contains("automatic", case=False), 1, 0)
+    df['automatic_pmt'] = np.where(df['payment_type'].str.contains("auto", case=False), 1, 0)
 
     #convert object type column to float for total_charges column
-    df['total_charges'] = pd.to_numeric(df['total_charges'], errors='coerce')
+    #df['total_charges'] = pd.to_numeric(df['total_charges'], errors='coerce')
 
     #Since customers with null values in the total_charges column have a tenure of 0, they are new customers who have not 
     #been charged yet.  Thus, set the null value in total_charges equal to 0.
-    df = df.replace(np.nan, 0, regex=True)
-
-    #mtm_churned = ((df.churn == 'Yes') & (df.contract_type=='Month-to-month'))
-    #df['mtm_churned'] = np.where(mtm_churned, 1, 0)
-
+    #df = df.replace(np.nan, 0, regex=True)
 
     # encode features that have string values 
     df.replace({'partner':{'Yes':1, 'No':0}}, inplace=True)
@@ -91,20 +91,10 @@ def prep_telco_encoded(df):
     df.replace({'churn':{'Yes':1, 'No':0}}, inplace=True)
     df.replace({'gender':{'Male':1, 'Female':0}}, inplace=True)
 
-    #df['mtm_churned'] = ((df.churn == 1) & (df.contract_type=='Month-to-month'))
-    #df['mtm_churned'] = np.where(df['mtm_churned'], 1, 0)
-
-
     # Drop unnecessary columns after creating dummy variables to represent them
     df = df.drop(columns=['multiple_lines','online_security','online_backup','device_protection','tech_support','streaming_tv','streaming_movies',
                         'contract_type','internet_service_type','payment_type','internet_service_type_id', 'contract_type_id','payment_type_id'])
     
-   
-    
-    #yes_no_features = ['partner','dependents','phone_service','multiple_lines','paperless_billing','churn']
-
-    #encode_columns(['partner','dependents','phone_service','multiple_lines','paperless_billing','churn'], df)  
-    #encode_columns(yes_no_features, df) 
     
     return df
 
