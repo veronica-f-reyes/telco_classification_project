@@ -8,7 +8,7 @@
 <hr style="border-top: 2px groove green; margin-top: 1px; margin-bottom: 1px"></hr>
 
 - Customers at the telecommunications company, Telco, are churning. 
-- The goal of this project is to determine why customers are churning by developing machine learning classification models to predict customer churn based on the customer data available. 
+- The goal of this project is to determine why customers are churning by developing machine learning classification models to predict customer churn based on the customer data available.  In particular, we will be looking into customers with automatic payments to see if there really is independent from churn.   
 - The models will be created using Python, Pandas, Matplot, Seaborn, and Scikit-Learn libraries. 
 
 
@@ -16,7 +16,10 @@
 
 PLAN -> Acquire -> Prepare -> Explore -> Model & Evaluate -> Deliver
 
-Working through the data science pipeline, 
+Working through the data science pipeline, we will acquire data using an acquire.py file which pulls data from the Telco churn database using SQL and joins 3 tables.
+We will prepare the data using a prepare.py file which will get rid of unneeded columns, encode string values to 0s and 1s and create dummies.
+Then we will explore the data by looking for possible relationships between features and look at how they are distribute by creating plots and looking at the data.
+Next we will create models using Decision Tree, Random Forest and K - Nearest Neighbors Classifiers.  We will then compare the models that were run on training data to validate data before running our model on the test data to get the final accuracy.  We will then present the Jupyter Notebook with the code of this entire process to the class.  
 
 #### Project Objectives
 
@@ -84,32 +87,53 @@ Working through the data science pipeline,
 
 
 
-
-
-
-
 ###  Null Hypothesis:  ![equation](https://latex.codecogs.com/gif.latex?%5Cinline%20H_0)
 
- - Customers not on automatic payment methods pay more than month-to-month customers on automatic payment methods. 
-
+ -  Customers who churn are independent of whether they are on automatic payments
 
 ### Althernative Hypothesis:  
 
-- Customers not on automatic payment methods pay less than or equal to customers on automatic payment methods.  
-
-
-### Instructions for Recreating This Project
-
-project planning (lay out your process through the data science pipeline), instructions or an explanation of how someone else can recreate your project and findings (What would someone need to be able to recreate your project on their own?),
-
-
+- Customers who churn are not dependent of whether they are on automatic payments 
 
 ### Answers to Hypotheses
 
+- We reject the hypothesis that customers who churn are independent of whether they are on automatic payments.
+
+    - This means that whether customers use automatic payments is an indicator of churn.  If they are on automatic payments, they are less likely to churn.  
 
 ### Key Findings
+- Continuing to dig deeper into the initial findings from the previous Telco churn project, we can now state that the payment method that a customer uses is not independent of churn
+- A customer's contract type and specific payment method are good indicators of churn.
+- Customers who were on month-to-month contracts were more likely to churn
+- Customers who use electronic checks as their payment method were more likely to churn.
+- Customers who use automatic payment methods are less likely to churn than those not on automatic payments
+- The model was successful in predicting churn accuracy with an accuracy of 0.88!
+- That is a higher than the baseline which was 0.74.
 
 
 ### Recommendations & Takeaways
+Offer incentives to convert to automatic payment plans
+Offer incentives to convert month-to-month customers to longer term customers
+Find out more about electronic check customers to determine if there are issues causing their churn
+Next Steps
+Continue running more models changing the hyperparameters to get a better model of churn
+Group features together, such as month-to-month e-check customers who do not have partners or service types to run models on
+Send a survery to customers who churn to further understand their actual reason for leaving
+Fine tune the model by optimizing for precision or recall
 
-*** 
+### How to Recreate This Project
+
+To recreate this project you will need the following files from this repository:
+- README.md
+- env file for you data base credentials to connect to the SQL database containing Telco data
+- acquire.py
+- prepare.py
+- explore.py
+- Final Telco Churn Project Notebook.ipynb
+
+
+Instructions:
+- Read the README.md
+- Download the aquire.py, prepare.py, explore.py and final_report.ipynb files into your working directory, or clone this repository
+- Add your own env file to your directory (user, password, host)  
+- Run the Final Telco Churn Project Notebook.ipynb notebook
