@@ -113,4 +113,12 @@ def split_data(df):
                                        stratify=train_validate.churn)
     return train, validate, test
 
-
+#Plots a normalized value count as a percent using catplotS
+def category_percentages_by_another_category_col(df, category_a, category_b):
+    """
+    Produces a .catplot with a normalized value count
+    """
+    (df.groupby(category_b)[category_a].value_counts(normalize=True)
+    .rename('percent')
+    .reset_index()
+    .pipe((sns.catplot, 'data'), x=category_a, y='percent', col=category_b, kind='bar', ))
