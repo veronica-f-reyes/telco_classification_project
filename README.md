@@ -53,8 +53,6 @@ Next we will create models using Decision Tree, Random Forest and K - Nearest Ne
 > - The Telco dataset from the Codeup database.
 > - The target variable for this assessment is going to be the feature Churn.
 
-
-
 #### Data Dictionary
 
 |Target|Datatype|Definition|
@@ -85,8 +83,6 @@ Next we will create models using Decision Tree, Random Forest and K - Nearest Ne
 | total_charges            | 7043 non-null: object| Total amount customer has paid  |              |
 ***
 
-
-
 ###  Null Hypothesis:  ![equation](https://latex.codecogs.com/gif.latex?%5Cinline%20H_0)
 
  -  Customers who churn are independent of whether they are on automatic payments
@@ -107,7 +103,8 @@ Next we will create models using Decision Tree, Random Forest and K - Nearest Ne
 - Customers who were on month-to-month contracts were more likely to churn
 - Customers who use electronic checks as their payment method were more likely to churn.
 - Customers who use automatic payment methods are less likely to churn than those not on automatic payments
-- The model was successful in predicting churn accuracy with an accuracy of 0.88!
+
+- The Random Forest model was successful in predicting churn accuracy on TEST data with an accuracy of 0.88!
 - That is a higher than the baseline which was 0.74.
 
 

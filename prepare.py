@@ -32,7 +32,7 @@ def prep_telco_raw(df):
     '''Prepares acquired Telco data for exploration'''
 
     # drop unneeded columns using .drop(columns=column_name)
-    df = df.drop(columns=['Unnamed: 0','customer_id', 'contract_type_id.1', 'internet_service_type_id.1','payment_type_id.1'])
+    df = df.drop(columns=['Unnamed: 0', 'contract_type_id.1', 'internet_service_type_id.1','payment_type_id.1'])
 
     #drop duplicates if there are any
     df = df.drop_duplicates()
