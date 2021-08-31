@@ -1,9 +1,4 @@
 
-# MAKE SURE TO INCLUDE THE FOLLOWING:
-a README.md file containing the project description with goals, initial hypotheses, a data dictionary, project planning (lay out your process through the data science pipeline), instructions or an explanation of how someone else can recreate your project and findings (What would someone need to be able to recreate your project on their own?), answers to your hypotheses, key findings, recommendations, and takeaways from your project.
-
-
-
 # Why are Customers Leaving?
 ### Telco Customer Churn Classification Project
 
@@ -95,29 +90,26 @@ Working through the data science pipeline,
 
 ###  Null Hypothesis:  ![equation](https://latex.codecogs.com/gif.latex?%5Cinline%20H_0)
 
- - Month-to-month customers not on automatic payment methods pay more than month-to-month customers on automatic payment methods. 
+ - Customers not on automatic payment methods pay more than month-to-month customers on automatic payment methods. 
 
 
 ### Althernative Hypothesis:  
 
-- Month-to-month customers not on automatic payment methods pay less than or equal to month-to-month customers on automatic payment methods.  
+- Customers not on automatic payment methods pay less than or equal to customers on automatic payment methods.  
+
+
+### Instructions for Recreating This Project
+
+project planning (lay out your process through the data science pipeline), instructions or an explanation of how someone else can recreate your project and findings (What would someone need to be able to recreate your project on their own?),
 
 
 
-### Data Acquisition
-Plan -> ACQUIRE -> Prepare -> Explore -> Model & Evaluate -> Deliver
+### Answers to Hypotheses
 
 
+### Key Findings
 
 
-CHECKLIST
-***
-
-Task out how you will work through the pipeline in as much detail as you need to keep on track.
-
-
-Clearly state your starting hypotheses (and add the testing of these to your task list).
-
-project planning (lay out your process through the data science pipeline), instructions or an explanation of how someone else can recreate your project and findings (What would someone need to be able to recreate your project on their own?), answers to your hypotheses, key findings, recommendations, and takeaways from your project
+### Recommendations & Takeaways
 
 *** 
